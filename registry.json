@@ -1,0 +1,8 @@
+{
+  "accordion": {
+    "files": ["index.astro", "style.css"]
+  },
+  "button": {
+    "files": ["index.astro", "style.css"]
+  }
+}

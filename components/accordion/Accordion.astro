@@ -1,0 +1,104 @@
+---
+import styles from './accordion.module.scss';
+
+interface AccordionItem {
+  title: string;
+  content?: string;
+}
+
+interface Props {
+  items?: AccordionItem[];
+  accordion_id?: string;
+  flush?: boolean;
+  stay_open?: boolean;
+  open_item_id?: number;
+  icon_position?: 'none' | 'left' | 'right';
+  accordion_uc?: string[];
+  accordion_item_uc?: string[];
+  icon?: 'plus' | 'none' | string;
+  reverse?: boolean;
+  className?: string;
+}
+
+const {
+  items = [],
+  icon_position = 'right',
+  flush = false,
+  stay_open = false,
+  open_item_id = 0,
+  accordion_id,
+  accordion_uc = [],
+  accordion_item_uc = [],
+  icon = 'chevron',
+  reverse = false,
+  className = '',
+} = Astro.props;
+
+const accordionId = accordion_id
+  ? String(accordion_id)
+  : `accordion-${Math.random().toString(36).substring(2, 11)}`;
+const accordionName = stay_open ? undefined : accordionId;
+
+const accordionClasses = [
+  styles.accordion,
+  'accordion',
+  flush && 'accordion-flush',
+  reverse && styles.reverse,
+  icon === 'plus' && styles.plus,
+  className,
+  ...accordion_uc,
+].filter(Boolean);
+
+const itemClasses = [
+  styles.item,
+  'accordion-item',
+  ...accordion_item_uc,
+].filter(Boolean);
+---
+
+{
+  items.length > 0 && (
+    <div id={accordionId} class:list={accordionClasses}>
+      {items.map((item: AccordionItem, index: number) => {
+        const content = item.content || '';
+        const isOpen = index === open_item_id;
+
+        return content ? (
+          <details
+            class:list={itemClasses}
+            open={isOpen}
+            {...(accordionName ? { name: accordionName } : {})}
+          >
+            <summary class={styles.title}>
+              {icon_position !== 'left' && <span>{item.title}</span>}
+
+              {icon_position !== 'none' && (
+                <div class='accordion-icon'>
+                  <svg
+                    width='800px'
+                    height='800px'
+                    viewBox='0 0 17 17'
+                    version='1.1'
+                    xmlns='http://www.w3.org/2000/svg'
+                    xmlns:xlink='http://www.w3.org/1999/xlink'
+                  >
+                    <path
+                      d='M16.354 5.075l-7.855 7.854-7.853-7.854 0.707-0.707 7.145 7.146 7.148-7.147 0.708 0.708z'
+                      fill='currentColor'
+                    />
+                  </svg>
+                </div>
+              )}
+
+              {icon_position === 'left' && <span>{item.title}</span>}
+            </summary>
+
+            <div class={styles.wrapper}>
+              <div class='accordion-body' set:html={content} />
+            </div>
+          </details>
+        ) : null;
+      })}
+    </div>
+  )
+}
