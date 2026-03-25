@@ -1,8 +1,8 @@
 {
   "accordion": {
-    "files": ["index.astro", "style.css"]
+    "files": ["Accordion.astro", "accordion.css"]
   },
   "button": {
-    "files": ["index.astro", "style.css"]
+    "files": ["Button.astro", "button.css"]
   }
 }
